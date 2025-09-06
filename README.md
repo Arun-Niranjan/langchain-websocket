@@ -1,7 +1,8 @@
 # langchain-websocket
 
-A demonstration of running a langchain workflow streaming JSON output via a websocket connection for chatbot applications
-Uses OpenAI for ease of use, but is compatible with any LLM API that supports streaming via Langchain
+A simple [Starlette application](https://www.starlette.io/) application that demonstrates [Langchain runnable streaming](https://python.langchain.com/docs/how_to/streaming/) with websockets, ideal for a chatbot application.
+
+![demo](haiku.gif)
 
 ## Setup
 Install:
