@@ -1,6 +1,6 @@
 # langchain-websocket
 
-A simple [Starlette application](https://www.starlette.io/) application that demonstrates [Langchain runnable streaming](https://python.langchain.com/docs/how_to/streaming/) with websockets, ideal for a chatbot application.
+A simple [Starlette](https://www.starlette.io/) application that demonstrates [Langchain runnable streaming](https://python.langchain.com/docs/how_to/streaming/) with websockets, ideal for a chatbot application.
 
 ![demo](haiku.gif)
 
