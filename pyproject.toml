@@ -1,0 +1,41 @@
+[project]
+name = "langchain-websocket"
+version = "0.1.0"
+description = "Demo of using langchain event streaming in a Starlette Websocket App"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain>=0.3.27",
+    "langchain-openai>=0.3.32",
+    "starlette>=0.47.3",
+    "uvicorn>=0.35.0",
+    "websockets>=15.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.12",
+]
+
+[tool.pyright]
+exclude = [
+    '__pycache__',
+    '.venv',
+    '.ruff_cache',
+]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
