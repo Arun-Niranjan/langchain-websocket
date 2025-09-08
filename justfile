@@ -11,7 +11,7 @@ setup:
     uv sync
 
 run-server:
-    uv run uvicorn main:app --host $SERVER_HOST --port $SERVER_PORT --workers 2
+    uv run uvicorn main:app --host $SERVER_HOST --port $SERVER_PORT --workers 2 --log-level info
 
 run-client:
     wscat -c http://$SERVER_HOST:$SERVER_PORT/ws/chat
