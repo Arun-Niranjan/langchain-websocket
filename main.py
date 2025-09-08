@@ -1,3 +1,4 @@
+import logging
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -9,6 +10,7 @@ from starlette.applications import Starlette
 from starlette.routing import WebSocketRoute
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+logger = logging.getLogger("uvicorn")
 
 @dataclass
 class ChatResponse:
@@ -65,7 +67,8 @@ async def websocket_endpoint(websocket: WebSocket):
 
         except WebSocketDisconnect:
             break
-        except Exception:
+        except Exception as e:
+            logger.error(f"Chatbot encountered error: {e}")
             err_resp = ChatResponse(
                 source="bot",
                 message={

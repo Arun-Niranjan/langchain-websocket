@@ -10,4 +10,4 @@ RUN uv sync --no-cache
 
 COPY . .
 
-CMD uv run uvicorn main:app --host 0.0.0.0 --port $SERVER_PORT
+CMD uv run uvicorn main:app --host 0.0.0.0 --port $SERVER_PORT --workers 2 --log-level info
