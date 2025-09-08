@@ -15,3 +15,9 @@ run-server:
 
 run-client:
     wscat -c http://$SERVER_HOST:$SERVER_PORT/ws/chat
+
+docker-build:
+    docker build -t langchain-websocket-server .
+
+docker-run:
+    docker run -p $SERVER_PORT:8000 --env-file .env langchain-websocket-server

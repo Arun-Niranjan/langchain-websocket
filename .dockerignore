@@ -1,0 +1,6 @@
+.ropeproject
+.ruff_cache
+.venv
+.env.dist
+.gitignore
+haiku.gif

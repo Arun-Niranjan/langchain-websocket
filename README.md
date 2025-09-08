@@ -40,8 +40,6 @@ INFO:     Application startup complete.
 INFO:     Started server process [1068814]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:35640 - "WebSocket /ws/chat" [accepted]
-INFO:     connection open
 ```
 
 in another terminal, run
@@ -94,4 +92,14 @@ Connected (press CTRL+C to quit)
 < {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings"},"type":"stream"}
 < {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"stream"}
 < {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"end"}
+```
+
+## Docker
+To build a docker image running the webserver, you can run
+```bash
+just docker-build
+```
+then to run the docker container, use
+```bash
+just docker-run
 ```
