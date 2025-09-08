@@ -94,12 +94,12 @@ Connected (press CTRL+C to quit)
 < {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"end"}
 ```
 
-## Docker
-To build a docker image running the webserver, you can run
+## Docker + Reverse Proxy
+To build a docker network with Caddy as a reverse proxy behind localhost run
 ```bash
-just docker-build
+just docker-run-server
 ```
-then to run the docker container, use
+You can then chat with the webserver behind the proxy using
 ```bash
-just docker-run
+just docker-run-client
 ```
