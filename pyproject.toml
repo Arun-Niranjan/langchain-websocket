@@ -5,6 +5,7 @@ description = "Demo of using langchain event streaming in a Starlette Websocket 
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "asyncio>=4.0.0",
     "langchain>=0.3.27",
     "langchain-openai>=0.3.32",
     "starlette>=0.47.3",
@@ -23,6 +24,9 @@ exclude = [
     '.venv',
     '.ruff_cache',
 ]
+
+[tool.ruff]
+line-length=100
 
 [tool.ruff.lint]
 select = [

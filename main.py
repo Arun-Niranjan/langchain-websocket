@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from dataclasses import asdict, dataclass
 from typing import Any
@@ -11,6 +12,7 @@ from starlette.routing import WebSocketRoute
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 logger = logging.getLogger("uvicorn")
+
 
 @dataclass
 class ChatResponse:
@@ -55,29 +57,44 @@ def get_response_from_event(event: StreamEvent) -> ChatResponse | None:
 
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        try:
-            user_msg = await websocket.receive_text()
+    try:
+        while True:
+            try:
+                user_msg = await asyncio.wait_for(websocket.receive_text(), timeout=15.0)
+            except TimeoutError:
+                await websocket.send_json(
+                    asdict(
+                        ChatResponse(
+                            source="bot",
+                            message={"content": "Connection timed out due to user inactivity."},
+                            type="error",
+                        )
+                    )
+                )
+                logger.info("Closing connection due to user inactivity")
+                await websocket.close(code=1000)
+                break
+
             start_resp = ChatResponse(source="bot", message={}, type="start")
             await websocket.send_json(asdict(start_resp))
-            async for event in chain.astream_events({"input": user_msg}):
-                resp = get_response_from_event(event)
-                if resp:
-                    await websocket.send_json(asdict(resp))
+            try:
+                async for event in chain.astream_events({"input": user_msg}):
+                    resp = get_response_from_event(event)
+                    if resp:
+                        await websocket.send_json(asdict(resp))
+            except Exception as e:
+                logger.error(f"Error processing chain events: {e}")
+                err_resp = ChatResponse(
+                    source="bot",
+                    message={"content": "error processing message, please try again later."},
+                    type="error",
+                )
+                await websocket.send_json(asdict(err_resp))
 
-        except WebSocketDisconnect:
-            break
-        except Exception as e:
-            logger.error(f"Chatbot encountered error: {e}")
-            err_resp = ChatResponse(
-                source="bot",
-                message={
-                    "content": "error connecting to chat-bot, please try again later."
-                },
-                type="error",
-            )
-            await websocket.send_json(asdict(err_resp))
-            break
+    except WebSocketDisconnect:
+        pass
+    except Exception as e:
+        logger.error(f"Chatbot encountered error: {e}")
 
 
 app = Starlette(routes=[WebSocketRoute("/ws/chat", websocket_endpoint)])
