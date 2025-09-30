@@ -14,7 +14,7 @@ run-server:
     uv run uvicorn main:app --host $SERVER_HOST --port $SERVER_PORT --workers 2 --log-level info
 
 run-client:
-    wscat -c http://$SERVER_HOST:$SERVER_PORT/ws/chat
+    wscat -c ws://$SERVER_HOST:$SERVER_PORT/ws/chat
 
 docker-run-server:
     docker compose up --build --force-recreate

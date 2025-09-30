@@ -94,6 +94,8 @@ Connected (press CTRL+C to quit)
 < {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"end"}
 ```
 
+you can also open up fe.html in your browser once the websocket server is running, which will demonstrate how the server message chunks can be assembled as they arrive.
+
 ## Docker + Reverse Proxy
 To build a docker network with Caddy as a reverse proxy behind localhost run
 ```bash
