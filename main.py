@@ -1,7 +1,6 @@
 import asyncio
 import logging
-from dataclasses import asdict, dataclass
-from typing import Any
+from dataclasses import asdict
 
 from langchain.chat_models import init_chat_model
 from langchain_core.output_parsers import JsonOutputParser
@@ -11,14 +10,9 @@ from starlette.applications import Starlette
 from starlette.routing import WebSocketRoute
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from models import ChatResponse, Message, MessageType
+
 logger = logging.getLogger("uvicorn")
-
-
-@dataclass
-class ChatResponse:
-    source: str
-    message: dict[str, Any]
-    type: str
 
 
 prompt_str = """
@@ -43,13 +37,13 @@ def get_response_from_event(event: StreamEvent) -> ChatResponse | None:
             return ChatResponse(
                 source="bot",
                 message=event.get("data", {}).get("chunk", ""),
-                type="stream",
+                type=MessageType.STREAM,
             )
         case "on_parser_end":
             return ChatResponse(
                 source="bot",
                 message=event.get("data", {}).get("output", ""),
-                type="end",
+                type=MessageType.END,
             )
         case _:
             return None
@@ -66,8 +60,8 @@ async def websocket_endpoint(websocket: WebSocket):
                     asdict(
                         ChatResponse(
                             source="bot",
-                            message={"content": "Connection timed out due to user inactivity."},
-                            type="error",
+                            message=Message(content="Connection timed out due to user inactivity."),
+                            type=MessageType.ERROR,
                         )
                     )
                 )
@@ -75,7 +69,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.close(code=1000)
                 break
 
-            start_resp = ChatResponse(source="bot", message={}, type="start")
+            start_resp = ChatResponse(source="bot", message=Message(), type=MessageType.START)
             await websocket.send_json(asdict(start_resp))
             try:
                 async for event in chain.astream_events({"input": user_msg}):
@@ -86,8 +80,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 logger.error(f"Error processing chain events: {e}")
                 err_resp = ChatResponse(
                     source="bot",
-                    message={"content": "error processing message, please try again later."},
-                    type="error",
+                    message=Message(content="error processing message, please try again later."),
+                    type=MessageType.ERROR,
                 )
                 await websocket.send_json(asdict(err_resp))
 
