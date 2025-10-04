@@ -1,5 +1,5 @@
 localhost:80 {
-    reverse_proxy web-server:{$SERVER_PORT}
+    reverse_proxy /ws/* web-server:{$SERVER_PORT}
     log {
         output stdout
         format console
