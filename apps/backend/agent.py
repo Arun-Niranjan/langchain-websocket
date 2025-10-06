@@ -9,10 +9,13 @@ from typing import Any
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel, Field
 from starlette.websockets import WebSocket, WebSocketDisconnect
+
+from config import CheckpointerType, settings
 
 
 # WebSocket Message Types
@@ -90,14 +93,23 @@ def get_transactions() -> dict[str, Any]:
     }
 
 
+def get_checkpointer():
+    """Get checkpointer based on configuration."""
+    if settings.checkpointer_type == CheckpointerType.POSTGRES:
+        checkpointer = PostgresSaver.from_conn_string(settings.postgres_connection_string)
+        checkpointer.setup()
+        return checkpointer
+    return MemorySaver()
+
+
 model = init_chat_model("gpt-4o-mini", model_provider="openai")
-memory = MemorySaver()
+checkpointer = get_checkpointer()
 
 agent = create_react_agent(
     model=model,
     tools=[get_transactions],
     prompt="You are a helpful financial assistant.",
-    checkpointer=memory,
+    checkpointer=checkpointer,
 )
 
 

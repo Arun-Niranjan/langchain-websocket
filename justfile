@@ -18,7 +18,7 @@ setup:
     cd apps/frontend && npm install
 
 run-server:
-    cd apps/backend && uv run uvicorn main:app --host $SERVER_HOST --port $SERVER_PORT --workers 2 --log-level info
+    cd apps/backend && CHECKPOINTER_TYPE=memory uv run uvicorn main:app --host $SERVER_HOST --port $SERVER_PORT --workers 2 --log-level info
 
 run-frontend:
     cd apps/frontend && npm run dev
@@ -30,7 +30,7 @@ health-local:
     hurl hurl/health-local.hurl
 
 docker-run-server:
-    cd docker && docker compose up --build --force-recreate --remove-orphans
+    cd docker && CHECKPOINTER_TYPE=postgres POSTGRES_HOST=postgres docker compose up --build --force-recreate --remove-orphans
 
 docker-run-client:
     wscat -c http://localhost:8080/ws/agent
