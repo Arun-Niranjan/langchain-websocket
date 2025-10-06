@@ -1,8 +1,6 @@
 # langchain-websocket
 
-A simple [Starlette](https://www.starlette.io/) application that demonstrates [Langchain runnable streaming](https://python.langchain.com/docs/how_to/streaming/) with websockets, ideal for a chatbot application.
-
-![demo](haiku.gif)
+A simple [Starlette](https://www.starlette.io/) and react application that demonstrates [Langchain runnable streaming](https://python.langchain.com/docs/how_to/streaming/) with websocketsa and an agent with a dummy tool
 
 ## Setup
 Install:
@@ -13,7 +11,6 @@ and then run
 ```bash
 just setup
 ```
-which will create a .venv python virtual environment with all dependencies.
 
 ## Environment variables
 See .env.dist for what you need. Then run
@@ -55,47 +52,6 @@ Connected (press CTRL+C to quit)
 >
 ```
 
-Now in the client terminal, type the subject of the haiku you would like the LLM to generate.
-You should soon see streamed responses as the LLM is generating them, all in valid JSON.
-
-
-```bash
-wscat -c http://$SERVER_HOST:$SERVER_PORT/ws/chat
-Connected (press CTRL+C to quit)
-> bears
-< {"source":"bot","message":{},"type":"start"}
-< {"source":"bot","message":{},"type":"stream"}
-< {"source":"bot","message":{"title":""},"type":"stream"}
-< {"source":"bot","message":{"title":"Maj"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":""},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  "},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \n"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nP"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  "},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \n"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings"},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"stream"}
-< {"source":"bot","message":{"title":"Majestic Bears","haiku":"Silent forest stroll,  \nPaws tread softly on the ground,  \nNature's quiet kings."},"type":"end"}
-```
-
-you can also open up fe.html in your browser once the websocket server is running, which will demonstrate how the server message chunks can be assembled as they arrive.
-
 ## Docker + Reverse Proxy
 To build a docker network with Caddy as a reverse proxy behind localhost run
 ```bash
@@ -104,4 +60,10 @@ just docker-run-server
 You can then chat with the webserver behind the proxy using
 ```bash
 just docker-run-client
+```
+
+## React Front-End
+whilst the docker server is running, run:
+```bash
+just run-frontend
 ```

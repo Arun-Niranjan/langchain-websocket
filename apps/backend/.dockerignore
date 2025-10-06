@@ -3,4 +3,4 @@
 .venv
 .env.dist
 .gitignore
-haiku.gif
+__pycache__
