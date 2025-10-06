@@ -28,7 +28,9 @@ class MessageType(StrEnum):
 # WebSocket API Models
 class StartMessage(BaseModel):
     type: MessageType = MessageType.START
-    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat() + "Z")
+    timestamp: str = Field(
+        default_factory=lambda: datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    )
 
 
 class ToolCallMessage(BaseModel):
@@ -64,7 +66,9 @@ class ErrorMessage(BaseModel):
 
 class EndMessage(BaseModel):
     type: MessageType = MessageType.END
-    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat() + "Z")
+    timestamp: str = Field(
+        default_factory=lambda: datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    )
 
 
 def get_transactions() -> dict[str, Any]:
