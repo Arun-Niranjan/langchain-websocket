@@ -1,6 +1,7 @@
+from unittest.mock import AsyncMock, MagicMock
+
 import pytest
 from starlette.testclient import TestClient
-from unittest.mock import AsyncMock, MagicMock
 
 from main import app
 

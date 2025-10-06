@@ -26,8 +26,14 @@ run-frontend:
 run-client:
     wscat -c ws://$SERVER_HOST:$SERVER_PORT/ws/agent
 
+health-local:
+    hurl hurl/health-local.hurl
+
 docker-run-server:
     cd docker && docker compose up --build --force-recreate --remove-orphans
 
 docker-run-client:
     wscat -c http://localhost:8080/ws/agent
+
+health-docker:
+    hurl hurl/health-docker.hurl
