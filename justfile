@@ -7,6 +7,12 @@ lint:
     cd apps/backend && uv run ruff check --fix
     cd apps/backend && uv run ruff format .
 
+test:
+    cd apps/backend && uv run --group test pytest -v
+
+test-cov:
+    cd apps/backend && uv run --group test pytest -v --cov=. --cov-report=term-missing
+
 setup:
     cd apps/backend && uv sync
     cd apps/frontend && npm install
