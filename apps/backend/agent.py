@@ -8,6 +8,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
+from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel, Field
 from starlette.websockets import WebSocket, WebSocketDisconnect
 import uuid
@@ -99,9 +100,16 @@ agent = create_react_agent(
     checkpointer=memory,
 )
 
+class AgentWebSocket:
+    def __init__(
+        self,
+        agent: CompiledStateGraph,
+        logger: Logger,
+    ):
+        self.agent = agent
+        self.logger = logger
 
-def get_agent_websocket_endpoint(logger: Logger):
-    async def agent_websocket_endpoint(websocket: WebSocket):
+    async def agent_websocket_endpoint(self, websocket: WebSocket):
         await websocket.accept()
 
         session_id = str(uuid.uuid4())
@@ -118,7 +126,7 @@ def get_agent_websocket_endpoint(logger: Logger):
                             code="TIMEOUT",
                         ).model_dump()
                     )
-                    logger.info("Closing connection due to user inactivity")
+                    self.logger.info("Closing connection due to user inactivity")
                     await websocket.close(code=1000)
                     break
 
@@ -129,7 +137,7 @@ def get_agent_websocket_endpoint(logger: Logger):
                     accumulated_content = ""
                     tool_call_map = {}  # Map tool_call_id to tool name
 
-                    async for message_chunk, metadata in agent.astream(
+                    async for message_chunk, metadata in self.agent.astream(
                         {"messages": [{"role": "user", "content": user_msg}]},
                         stream_mode="messages",
                         config=config,
@@ -193,7 +201,7 @@ def get_agent_websocket_endpoint(logger: Logger):
                     await websocket.send_json(EndMessage().model_dump())
 
                 except Exception as e:
-                    logger.error(f"Error processing agent events: {e}")
+                    self.logger.error(f"Error processing agent events: {e}")
                     await websocket.send_json(
                         ErrorMessage(
                             message="Error processing message, please try again later.",
@@ -204,6 +212,5 @@ def get_agent_websocket_endpoint(logger: Logger):
         except WebSocketDisconnect:
             pass
         except Exception as e:
-            logger.error(f"Agent encountered error: {e}")
+            self.logger.error(f"Agent encountered error: {e}")
 
-    return agent_websocket_endpoint

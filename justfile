@@ -8,10 +8,10 @@ lint:
     cd apps/backend && uv run ruff format .
 
 test:
-    cd apps/backend && uv run --group test pytest -v
+    cd apps/backend && uv run --group test pytest -v -n auto
 
 test-cov:
-    cd apps/backend && uv run --group test pytest -v --cov=. --cov-report=term-missing
+    cd apps/backend && uv run --group test pytest -v -n auto --cov=. --cov-report=term-missing
 
 setup:
     cd apps/backend && uv sync
