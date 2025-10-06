@@ -9,6 +9,7 @@ dependencies = [
     "langchain>=0.3.27",
     "langchain-openai>=0.3.32",
     "langgraph>=0.6.8",
+    "pydantic-settings>=2.11.0",
     "starlette>=0.47.3",
     "uvicorn>=0.35.0",
     "websockets>=15.0.1",
@@ -23,6 +24,7 @@ test = [
     "pytest>=8.4.2",
     "httpx>=0.28.1",
     "pytest-mock>=3.15.1",
+    "pytest-xdist>=3.8.0",
 ]
 
 [tool.pytest.ini_options]
