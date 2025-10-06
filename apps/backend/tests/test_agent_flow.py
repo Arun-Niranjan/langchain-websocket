@@ -118,9 +118,7 @@ class TestAgentMessageFlow:
                 assert "content_complete" in message_types
 
                 # CONTENT_COMPLETE should come after all CONTENT_DELTAs
-                last_delta_idx = max(
-                    i for i, t in enumerate(message_types) if t == "content_delta"
-                )
+                last_delta_idx = max(i for i, t in enumerate(message_types) if t == "content_delta")
                 complete_idx = message_types.index("content_complete")
                 assert complete_idx > last_delta_idx
 

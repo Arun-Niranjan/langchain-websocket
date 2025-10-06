@@ -6,6 +6,7 @@ from starlette.testclient import TestClient
 
 from main import app
 
+
 @pytest.mark.skip
 class TestInactivityTimeout:
     """Test 15-second inactivity timeout behavior."""
@@ -40,7 +41,7 @@ class TestInactivityTimeout:
 
             # Connection should close
             # Trying to receive again should raise an exception or return close frame
-            with pytest.raises(Exception):
+            with pytest.raises(Exception):  # noqa: B017
                 websocket.receive_text()
 
     def test_no_timeout_with_active_conversation(self):
@@ -96,9 +97,7 @@ class TestInactivityTimeout:
                 if msg["type"] == "end":
                     break
                 if msg["type"] == "error" and msg["code"] == "TIMEOUT":
-                    pytest.fail(
-                        "Timeout occurred after sending second message"
-                    )
+                    pytest.fail("Timeout occurred after sending second message")
 
             # Should complete successfully
             assert messages[-1]["type"] == "end"

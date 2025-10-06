@@ -1,4 +1,6 @@
 import asyncio
+import json
+import uuid
 from datetime import UTC, datetime
 from enum import StrEnum
 from logging import Logger
@@ -7,12 +9,10 @@ from typing import Any
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel, Field
 from starlette.websockets import WebSocket, WebSocketDisconnect
-import uuid
-import json
 
 
 # WebSocket Message Types
@@ -100,6 +100,7 @@ agent = create_react_agent(
     checkpointer=memory,
 )
 
+
 class AgentWebSocket:
     def __init__(
         self,
@@ -137,7 +138,7 @@ class AgentWebSocket:
                     accumulated_content = ""
                     tool_call_map = {}  # Map tool_call_id to tool name
 
-                    async for message_chunk, metadata in self.agent.astream(
+                    async for message_chunk, _metadata in self.agent.astream(
                         {"messages": [{"role": "user", "content": user_msg}]},
                         stream_mode="messages",
                         config=config,
@@ -213,4 +214,3 @@ class AgentWebSocket:
             pass
         except Exception as e:
             self.logger.error(f"Agent encountered error: {e}")
-

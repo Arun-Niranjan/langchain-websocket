@@ -1,7 +1,5 @@
 import json
-from datetime import UTC, datetime
-
-import pytest
+from datetime import datetime
 
 from agent import (
     ContentCompleteMessage,

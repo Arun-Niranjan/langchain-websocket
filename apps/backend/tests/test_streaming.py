@@ -123,7 +123,9 @@ class TestContentStreaming:
                 assert len(delta_msg["accumulated"]) > 0
 
     def test_streaming_provides_incremental_updates(self):
-        """Test that streaming provides incremental updates rather than sending everything at once."""
+        """
+        Test that streaming provides incremental updates rather than sending everything at once.
+        """
         client = TestClient(app)
         with client.websocket_connect("/ws/agent") as websocket:
             websocket.send_text("Explain what financial transactions are in detail")
