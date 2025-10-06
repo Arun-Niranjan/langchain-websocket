@@ -5,10 +5,12 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route, WebSocketRoute
 
-from agent import AgentWebSocket, agent
+from agent import AgentWebSocket, bootstrap_agent
+from config import settings
 
 logger = logging.getLogger("uvicorn")
 
+agent = bootstrap_agent(settings)
 aws = AgentWebSocket(
     agent,
     logger,

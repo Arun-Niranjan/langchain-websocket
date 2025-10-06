@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-langchain}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-langchain}
+      POSTGRES_DB: ${POSTGRES_DB:-langchain}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-langchain}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   web-server:
     build:
       context: ../apps/backend
@@ -9,6 +23,9 @@ services:
       - ${SERVER_PORT}
     env_file:
       - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   caddy:
     image: caddy:latest
@@ -27,5 +44,6 @@ services:
       - web-server
 
 volumes:
+  postgres_data:
   caddy_data:
   caddy_config:
