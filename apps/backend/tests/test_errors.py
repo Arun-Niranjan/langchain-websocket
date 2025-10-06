@@ -25,7 +25,7 @@ class TestErrorHandling:
     def test_agent_processing_error(self):
         """Test error handling when agent processing fails."""
         # Mock the agent to raise an exception
-        with patch("agent.agent") as mock_agent:
+        with patch("main.agent") as mock_agent:
             mock_stream = AsyncMock()
             mock_stream.__aiter__.return_value = iter([])
             mock_stream.side_effect = Exception("Test error")
